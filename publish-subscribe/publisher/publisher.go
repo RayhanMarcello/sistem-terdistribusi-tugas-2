@@ -1,10 +1,3 @@
-// publisher.go — E-commerce Order Publisher (Golang)
-// Mengirim event order ke RabbitMQ Exchange (fanout)
-//
-// Jalankan:
-//   go run publisher.go              → demo otomatis 10 event
-//   go run publisher.go --interaktif → pilih event sendiri
-
 package main
 
 import (
@@ -22,15 +15,11 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-// ─── Konfigurasi ─────────────────────────────────────────────────────────────
-
 const (
 	rabbitmqURL  = "amqp://guest:guest@localhost:5672/"
 	exchangeName = "ecommerce.exchange"
 	exchangeType = "fanout"
 )
-
-// ─── Struktur Data ───────────────────────────────────────────────────────────
 
 type Produk struct {
 	ID    string
@@ -54,8 +43,7 @@ type OrderEvent struct {
 	Payload   OrderPayload `json:"payload"`
 }
 
-// ─── Data Dummy ──────────────────────────────────────────────────────────────
-
+// Data Dummy
 var produkList = []Produk{
 	{ID: "P001", Nama: "Laptop Gaming ASUS", Harga: 12500000},
 	{ID: "P002", Nama: "Smartphone Samsung S24", Harga: 8200000},
@@ -71,7 +59,7 @@ var eventTypes = []string{
 	"order.cancelled",
 }
 
-// ─── Koneksi RabbitMQ ────────────────────────────────────────────────────────
+// Koneksi RabbitMQ
 
 func connectRabbitMQ() (*amqp.Connection, *amqp.Channel, error) {
 	conn, err := amqp.Dial(rabbitmqURL)
@@ -85,7 +73,6 @@ func connectRabbitMQ() (*amqp.Connection, *amqp.Channel, error) {
 		return nil, nil, fmt.Errorf("gagal buka channel: %w", err)
 	}
 
-	// Deklarasi fanout exchange
 	// fanout = pesan disiarkan ke SEMUA queue yang terikat
 	err = ch.ExchangeDeclare(
 		exchangeName, // nama exchange
@@ -105,7 +92,7 @@ func connectRabbitMQ() (*amqp.Connection, *amqp.Channel, error) {
 	return conn, ch, nil
 }
 
-// ─── Buat & Kirim Pesan ──────────────────────────────────────────────────────
+//Buat & Kirim Pesan
 
 func buatEvent(eventType, orderID string, produk Produk) OrderEvent {
 	return OrderEvent{
@@ -153,7 +140,7 @@ func publishEvent(ch *amqp.Channel, event OrderEvent) error {
 	return nil
 }
 
-// ─── Mode Demo Otomatis ──────────────────────────────────────────────────────
+//Mode Demo Otomatis
 
 func jalankanDemoOtomatis(jumlah int, jeda time.Duration) {
 	conn, ch, err := connectRabbitMQ()
@@ -181,7 +168,7 @@ func jalankanDemoOtomatis(jumlah int, jeda time.Duration) {
 	fmt.Println("\n[Publisher] Semua event telah dikirim. Koneksi ditutup.")
 }
 
-// ─── Mode Interaktif ─────────────────────────────────────────────────────────
+//Mode Interaktif
 
 func jalankanInteraktif() {
 	conn, ch, err := connectRabbitMQ()
@@ -193,8 +180,6 @@ func jalankanInteraktif() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	counter := 1
-
-	// fmt.Println("\n[Publisher] Mode interaktif — ketik 'q' untuk keluar.\n")
 
 	for {
 		fmt.Println(strings.Repeat("─", 55))
@@ -245,8 +230,6 @@ func jalankanInteraktif() {
 	fmt.Println("[Publisher] Koneksi ditutup.")
 }
 
-// ─── Helper ──────────────────────────────────────────────────────────────────
-
 func formatRupiah(n int) string {
 	s := strconv.Itoa(n)
 	result := ""
@@ -258,8 +241,6 @@ func formatRupiah(n int) string {
 	}
 	return result
 }
-
-// ─── Main ────────────────────────────────────────────────────────────────────
 
 func main() {
 	rand.Seed(time.Now().UnixNano())

@@ -8,19 +8,19 @@ Repository ini berisi simulasi interaktif dari dua model komunikasi fundamental 
 
 Model **Request-Response** mendemonstrasikan pola komunikasi **sinkron, point-to-point**, dan berpautan erat (_tightly coupled_). Pada model ini, *client* memulai komunikasi dengan secara langsung memanggil *server*, dan harus menunggu (memblokir eksekusi) sampai *server* mengembalikan respon atau mengalami *timeout/error*.
 
-### 💻 Arsitektur (Direktori: `backend` & `frontend`)
+### Arsitektur (Direktori: `backend` & `frontend`)
 - **Backend (Server):** Ditulis dalam **Golang** menggunakan framework **Gin**. Menjalankan server HTTP di port `:8081` dan mengakses database.
 - **Frontend (Client):** Ditulis menggunakan **React + Vite**. Menampilkan antarmuka interaktif dan diagram animasi aliran data (*flow*) secara _real-time_.
 - **Database:** Memanfaatkan **MySQL** (lewat GORM) yang menyimpan log *Request* serta respons yang diberikan dalam simulasi ini (tabel `sim_requests` & `sim_responses`).
 
-### ⚙️ Fitur Utama Simulasi
+### Fitur Utama Simulasi
 - Visualisasi Diagram Animasi aliran *request-response* dari Client -> Server -> Database -> Server -> Client.
 - Konfigurasi nilai *Latency Simulator* secara live (100ms - 3000ms).
 - Konfigurasi *Error Rate* (0% - 30%) yang menunjukkan toleransi kegagalan (*fault tolerance*) rendah khas sistem *Request-Response*.
 - Pengujian API transaksi (GET endpoint, POST data order, PUT update data, dll).
 - Metrik analitik (Jumlah Request, Rata-rata *Latency*, % Sukses, dll.) hasil tangkapan dari log interaksi di MySQL.
 
-### 🚀 Cara Menjalankan
+### Cara Menjalankan
 1. Pastikan dependensi Go, Node, dan MySQL berjalan (`DB_NAME=sister2`).
 2. Masuk ke direktori `backend` dan jalankan: `go run main.go`
 3. Buka terminal baru, masuk ke direktori `frontend`, jalankan: `npm run dev`
@@ -32,7 +32,7 @@ Model **Request-Response** mendemonstrasikan pola komunikasi **sinkron, point-to
 
 Model **Publish-Subscribe** mendemonstrasikan pola komunikasi **asinkron, fanout (1-to-many)**, dan berpautan longgar (_loosely coupled_). Pada model ini, pengirim pesan (*Publisher*) tidak peduli siapa yang menerima pesannya, ia hanya menyiarkan pesannya (*event*) ke dalam sebuah saluran (*Message Broker*). *Subscriber* (Consumer) yang berlangganan pada saluran tersebut akan otomatis menerima *event* dan memprosesnya secara paralel.
 
-### 💻 Arsitektur (Direktori: `publish-subscribe`)
+### Arsitektur (Direktori: `publish-subscribe`)
 - **Bahasa Pemrograman:** Golang murni.
 - **Message Broker:** Memanfaatkan **RabbitMQ** dengan konfigurasi tipe *Exchange Fanout* (`ecommerce_events`).
 - **Publisher:** Mengemisikan *event* e-commerce (mis: `order.created`, `payment.success`).
@@ -42,12 +42,12 @@ Model **Publish-Subscribe** mendemonstrasikan pola komunikasi **asinkron, fanout
   3. `ShippingService`: bereaksi mendelegasikan alamat logistik.
   4. `NotificationService`: bereaksi mengirim e-mail pelanggan.
 
-### ⚙️ Fitur Utama Simulasi
+### Fitur Utama Simulasi
 - Menampilkan jalannya komunikasi **asinkron** dan independensinya (tidak ada konsumen yang saling menunggu, Publisher tidak *blocking* menunggu balasan).
 - Menggarisbawahi kegunaan arsitektur penanganan *Event-Driven* pada E-Commerce.
 - Jika satu *consumer* sibuk/mengalami kegagalan lokal, itu tidak akan membuat seluruh alur Publisher tertunda / *crash* (High *Fault-Tolerance* & *Buffering*).
 
-### 🚀 Cara Menjalankan
+### Cara Menjalankan
 1. Pastikan *server* atau wadah sistem RabbitMQ lokal Anda aktif pada port `:5672`.
 2. Masuk ke direktori `publish-subscribe`, jalankan *consumers* terlebih dahulu:
    `go run consumers/consumers.go --semua`
@@ -66,4 +66,4 @@ Model **Publish-Subscribe** mendemonstrasikan pola komunikasi **asinkron, fanout
 | **Kelebihan** | Sederhana, Laporan Transaksional Sukses/Gagal Jelas seketika | Skalabilitas parallel Tinggi, Kuat menahan kegagalan sementara (*Buffering*) |
 | **Digunakan Saat...** | Menggambil data CRUD, interaksi *Database*, Konfirmasi Final | Notifikasi Beragam Layanan, Sinkronisasi *Microservice*, *Webhooks* Latar Belakang |
 
-_Tugas 2 Sistem Terdistribusi - Rayhan Marcello_
+_Tugas 2 Sistem Terdistribusi - Rayhan Marcello Ananda Purnomo - 11231086_

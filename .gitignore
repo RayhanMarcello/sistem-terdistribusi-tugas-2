@@ -1,0 +1,22 @@
+# Backend
+backend/.env
+backend/sister-tugas2-reqres
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env*
+
+# Go
+*.exe
+*.out
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
